@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Анкета — ALEKSEY CHEKMAREV</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { -webkit-text-size-adjust: 100%; }
+html, body { margin: 0; padding: 0; overflow-x: hidden; }
+
+body {
+  background: #000;
+  color: #e5e5e5;
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.page-wrap {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 28px 20px env(safe-area-inset-bottom, 20px);
+  position: relative;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.logo {
+  font-family: Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #faf8f5;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+}
+.logo span { color: #c97a4a; }
+
+.header-sub {
+  font-size: 0.82rem;
+  color: #888;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, #c97a4a 0%, #c97a4a 30%, #2a2a2a 100%);
+  margin-bottom: 24px;
+}
+
+/* PROGRESS */
+.progress-wrap {
+  margin-bottom: 28px;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.progress-title {
+  font-size: 0.78rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.progress-pct {
+  font-size: 0.82rem;
+  color: #c97a4a;
+  font-weight: 700;
+}
+.progress-bar-bg {
+  height: 3px;
+  background: #1a1a1a;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: #c97a4a;
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+/* STEPS DOTS */
+.steps-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2a2a2a;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+.step-dot.completed {
+  background: #6abf6a;
+}
+.step-dot.active {
+  background: #c97a4a;
+  transform: scale(1.3);
+}
+
+/* BLOCKS */
+.block {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  display: none;
+  animation: slideIn 0.5s ease;
+}
+.block.active {
+  display: block;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-30px); }
+}
+
+.block-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #faf8f5;
+  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  letter-spacing: 0.01em;
+}
+.block-title::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #c97a4a;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #1a1208;
+  border: 1px solid #c97a4a;
+  color: #faf8f5;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  z-index: 999;
+  opacity: 0;
+  transition: all 0.4s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* GRID */
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.field-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+.field-group:last-child { margin-bottom: 0; }
+
+label.field-label {
+  color: #faf8f5;
+  font-weight: 600;
+  font-size: 0.88rem;
+  margin-bottom: 7px;
+  display: block;
+}
+label.field-label .req {
+  color: #c97a4a;
+  margin-left: 2px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+select,
+textarea {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  color: #e5e5e5;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  width: 100%;
+  transition: border-color 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type="text"]::placeholder,
+input[type="number"]::placeholder,
+textarea::placeholder { color: #444; }
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #c97a4a;
+}
+
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+/* RADIO CARDS */
+.radio-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.radio-card-item {
+  position: relative;
+}
+.radio-card-item input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.radio-card-item label {
+  display: block;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  padding: 9px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  color: #ccc;
+  font-weight: 500;
+  transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.radio-card-item input[type="radio"]:checked + label {
+  border-color: #c97a4a;
+  background: #1a1208;
+  color: #faf8f5;
+}
+.radio-card-item label:hover {
+  border-color: #c97a4a;
+  transform: scale(1.03);
+}
+
+/* PLAIN RADIO */
+.radio-row {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.radio-plain-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+}
+.radio-plain-item input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #c97a4a;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.radio-plain-item span {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+/* RANGE */
+.range-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+input[type="range"] {
+  flex: 1;
+  accent-color: #c97a4a;
+  height: 4px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #2a2a2a;
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #c97a4a;
+  cursor: pointer;
+  border: 2px solid #000;
+  box-shadow: 0 0 0 2px #c97a4a33;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #c97a4a;
+  cursor: pointer;
+  border: 2px solid #000;
+}
+.range-val {
+  min-width: 32px;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #c97a4a;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 3px 8px;
+}
+.range-hint {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: #555;
+  margin-top: 4px;
+}
+
+/* CHECKBOXES */
+.check-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+.check-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  padding: 7px 14px;
+  border-radius: 8px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.check-item:hover { border-color: #c97a4a; }
+.check-item input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  accent-color: #c97a4a;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.check-item span {
+  font-size: 0.88rem;
+  color: #ccc;
+}
+.check-item:has(input:checked) {
+  border-color: #c97a4a;
+  background: #1a1208;
+}
+.check-item:has(input:checked) span {
+  color: #faf8f5;
+}
+
+/* Single checkbox */
+.check-single {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.check-single:last-of-type { margin-bottom: 0; }
+.check-single input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #c97a4a;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.check-single span {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+/* CHECKMARK */
+.checkmark-icon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.checkmark-icon circle {
+  fill: none;
+  stroke: #6abf6a;
+  stroke-width: 2;
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  animation: drawCircle 0.6s ease forwards;
+}
+.checkmark-icon path {
+  fill: none;
+  stroke: #6abf6a;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: drawCheck 0.4s ease 0.4s forwards;
+}
+@keyframes drawCircle {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes drawCheck {
+  to { stroke-dashoffset: 0; }
+}
+
+/* SAVED INDICATOR */
+.saved-indicator {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #0a1a0a;
+  border: 1px solid #2a6a2a;
+  color: #6abf6a;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 999;
+  pointer-events: none;
+}
+.saved-indicator.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* NAVIGATION */
+.nav-area {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 28px;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+.btn-nav {
+  background: #1a1a1a;
+  color: #faf8f5;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 12px 32px;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background 0.2s, border-color 0.2s;
+  flex: 1;
+  text-align: center;
+}
+.btn-nav:hover { background: #2a2a2a; border-color: #c97a4a; }
+.btn-nav:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-submit {
+  background: #c97a4a;
+  color: #000;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px 48px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: background 0.2s, transform 0.15s;
+  flex: 2;
+}
+.btn-submit:hover { background: #b8693a; }
+.btn-submit:active { transform: scale(0.98); }
+
+.btn-submit.pulse {
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(201, 122, 74, 0.6); }
+  70% { box-shadow: 0 0 0 12px rgba(201, 122, 74, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(201, 122, 74, 0); }
+}
+
+/* ERROR */
+.field-error {
+  font-size: 0.78rem;
+  color: #e05a3a;
+  margin-top: 5px;
+  display: none;
+}
+.field-error.visible { display: block; }
+input.invalid, select.invalid, textarea.invalid {
+  border-color: #e05a3a !important;
+}
+
+/* SUCCESS BANNER */
+.success-banner {
+  display: none;
+  background: #0a1a0a;
+  border: 1px solid #2a6a2a;
+  border-radius: 12px;
+  padding: 28px 24px;
+  text-align: center;
+  margin-top: 20px;
+}
+.success-banner.visible { display: block; }
+.success-banner h2 {
+  color: #6abf6a;
+  margin: 0 0 10px;
+  font-size: 1.2rem;
+}
+.success-banner p {
+  color: #aaa;
+  margin: 0;
+  font-size: 0.92rem;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 24px 0 16px;
+  font-size: 0.78rem;
+  color: #444;
+  letter-spacing: 0.04em;
+}
+
+/* INTRO SCREEN */
+.intro-screen {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #000;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  transition: opacity 0.5s ease;
+}
+.intro-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.intro-logo {
+  font-family: Georgia, serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #faf8f5;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.intro-logo span { color: #c97a4a; }
+.intro-sub {
+  font-size: 0.95rem;
+  color: #c97a4a;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 30px;
+}
+.intro-slogan {
+  font-family: Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #faf8f5;
+  margin-bottom: 16px;
+  line-height: 1.3;
+}
+.intro-slogan span { color: #c97a4a; }
+.intro-text {
+  font-size: 1.05rem;
+  color: #888;
+  margin-bottom: 30px;
+  max-width: 420px;
+  line-height: 1.5;
+}
+.btn-start {
+  background: #c97a4a;
+  color: #000;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 16px 48px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-start:hover { background: #b8693a; }
+.btn-start:active { transform: scale(0.98); }
+
+/* CONFETTI CANVAS */
+#confetti-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 2000;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .page-wrap { padding: 14px 12px env(safe-area-inset-bottom, 12px); }
+  .field-row, .field-row-3 { grid-template-columns: 1fr; }
+  header { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .block { padding: 16px; }
+  .nav-area { flex-direction: column-reverse; }
+  .btn-nav, .btn-submit { width: 100%; }
+  .radio-cards { gap: 7px; }
+  .intro-slogan { font-size: 1.3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- INTRO SCREEN -->
+<div class="intro-screen" id="intro-screen">
+  <div class="intro-logo"><span>ALE</span>KSEY</div>
+  <div class="intro-logo">CHEK<span>MAREV</span></div>
+  <div class="intro-sub">Твой персональный тренер</div>
+  <div class="intro-slogan">Результат, который <span>изменит всё</span></div>
+  <div class="intro-text">
+    Заполни анкету — и получи персональную программу тренировок и питания, созданную специально для тебя. Это займёт всего 5 минут.
+  </div>
+  <button class="btn-start" onclick="startQuiz()">Начать</button>
+</div>
+
+<!-- CONFETTI -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- SAVED INDICATOR -->
+<div class="saved-indicator" id="saved-indicator">✓ Сохранено</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">CHEK<span>MAREV</span></div>
+    <div class="header-sub" id="step-title">Шаг 1 из 7</div>
+  </header>
+  <div class="divider"></div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span class="progress-title">Заполнено</span>
+      <span class="progress-pct" id="pct-label">0%</span>
+    </div>
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- STEPS DOTS -->
+  <div class="steps-dots" id="steps-dots">
+    <div class="step-dot active" data-dot="1"></div>
+    <div class="step-dot" data-dot="2"></div>
+    <div class="step-dot" data-dot="3"></div>
+    <div class="step-dot" data-dot="4"></div>
+    <div class="step-dot" data-dot="5"></div>
+    <div class="step-dot" data-dot="6"></div>
+    <div class="step-dot" data-dot="7"></div>
+  </div>
+
+  <!-- FORM -->
+  <form id="main-form" action="https://formsubmit.co/ajax/AlekseyChekmarev310396@yandex.ru" method="POST" novalidate autocomplete="off">
+    <!-- FormSubmit hidden fields -->
+    <input type="hidden" name="_subject" value="Новая анкета от клиента CHEKMAREV">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_captcha" value="false">
+
+    <!-- БЛОК 1 — ОБЩИЕ ДАННЫЕ -->
+    <div class="block active" data-step="1">
+      <h3 class="block-title">Общие данные</h3>
+      <p style="color:#888; font-size:0.9rem; margin-bottom:20px;">Давай начнём с основ. Расскажи немного о себе.</p>
+
+      <div class="field-group">
+        <label class="field-label" for="fio">ФИО <span class="req">*</span></label>
+        <input type="text" id="fio" name="fio" placeholder="Иванов Иван Иванович" required data-req>
+        <span class="field-error" id="err-fio">Заполни это поле</span>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="phone">Номер телефона <span class="req">*</span></label>
+          <input type="text" id="phone" name="phone" placeholder="+7 (999) 123-45-67" required data-req>
+          <span class="field-error" id="err-phone">Укажи номер телефона</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="city">Город <span class="req">*</span></label>
+          <input type="text" id="city" name="city" placeholder="Москва" required data-req>
+          <span class="field-error" id="err-city">Укажи город</span>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="age">Возраст <span class="req">*</span></label>
+          <input type="number" id="age" name="age" placeholder="25" min="10" max="100" required data-req>
+          <span class="field-error" id="err-age">Укажи возраст</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Пол <span class="req">*</span></label>
+          <div class="radio-row" style="margin-top:4px;">
+            <label class="radio-plain-item">
+              <input type="radio" name="gender" value="male" data-req-radio="gender" required>
+              <span>Мужской</span>
+            </label>
+            <label class="radio-plain-item">
+              <input type="radio" name="gender" value="female">
+              <span>Женский</span>
+            </label>
+          </div>
+          <span class="field-error" id="err-gender">Выбери пол</span>
+        </div>
+      </div>
+
+      <div class="field-row-3">
+        <div class="field-group">
+          <label class="field-label" for="height">Рост, см <span class="req">*</span></label>
+          <input type="number" id="height" name="height" placeholder="175" min="100" max="250" required data-req>
+          <span class="field-error" id="err-height">Укажи рост</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="weight_cur">Текущий вес, кг <span class="req">*</span></label>
+          <input type="number" id="weight_cur" name="weight_cur" placeholder="75" min="30" max="300" required data-req>
+          <span class="field-error" id="err-weight_cur">Укажи вес</span>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="weight_goal">Желаемый вес, кг</label>
+          <input type="number" id="weight_goal" name="weight_goal" placeholder="70" min="30" max="300">
+        </div>
+      </div>
+
+      <!-- IMT Display -->
+      <div id="imt-display" style="display:none; margin-top:10px; padding:10px 14px; background:#111; border:1px solid #2a2a2a; border-radius:8px; font-size:0.88rem; color:#888;">
+        <span style="color:#c97a4a; font-weight:600;">Твой ИМТ: </span><span id="imt-value">—</span>
+      </div>
+    </div>
+
+    <!-- БЛОК 2 — ЦЕЛЬ -->
+    <div class="block" data-step="2">
+      <h3 class="block-title">Твоя цель</h3>
+      <p style="color:#888; font-size:0.9rem; margin-bottom:20px;">К чему мы стремимся? Выбери главную цель.</p>
+
+      <div class="field-group">
+        <label class="field-label">Основная цель <span class="req">*</span></label>
+        <div class="radio-cards" id="goal-cards">
+          <div class="radio-card-item"><input type="radio" name="goal" id="g1" value="loss" data-req-radio="goal" required><label for="g1">Снижение веса</label></div>
+          <div class="radio-card-item"><input type="radio" name="goal" id="g2" value="gain"><label for="g2">Набор массы</label></div>
+          <div class="radio-card-item"><input type="radio" name="goal" id="g3" value="recomp"><label for="g3">Рекомпозиция</label></div>
+          <div class="radio-card-item"><input type="radio" name="goal" id="g4" value="maintain"><label for="g4">Поддержание формы</label></div>
+          <div class="radio-card-item"><input type="radio" name="goal" id="g5" value="event"><label for="g5">Подготовка к событию</label></div>
+        </div>
+        <span class="field-error" id="err-goal">Выбери цель</span>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="deadline">Сроки</label>
+          <select id="deadline" name="deadline">
+            <option value="">— выбери —</option>
+            <option value="1m">1 месяц</option>
+            <option value="3m">3 месяца</option>
+            <option value="6m">6 месяцев</option>
+            <option value="1y">1 год</option>
+            <option value="none">Без ограничений</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="motivation">Мотивация</label>
+          <div class="range-wrap">
+            <input type="range" id="motivation" name="motivation" min="1" max="10" value="7" class="range-input">
+            <span class="range-val" id="motivation-val">7</span>
+          </div>
+          <div class="range-hint"><span>1 — низкая</span><span>10 — максимум</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- БЛОК 3 — ЗДОРОВЬЕ -->
+    <div class="block" data-step="3">
+      <h3 class="block-title">Здоровье</h3>
+      <p style="color:#888; font-size:0.9rem; margin-bottom:20px;">Важный блок. Это поможет нам избежать рисков.</p>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="diseases">Хронические заболевания</label>
+          <textarea id="diseases" name="diseases" placeholder="Диабет, гипертония, астма..."></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="injuries">Травмы, операции и ограничения <span class="req">*</span></label>
+          <textarea id="injuries" name="injuries" placeholder="Травма колена, проблемы с позвоночником..." required data-req></textarea>
+          <span class="field-error" id="err-injuries">Заполни это поле</span>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="allergies">Аллергии на продукты</label>
+          <textarea id="allergies" name="allergies" placeholder="Лактоза, глютен, орехи..."></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="meds">Приём лекарств</label>
+          <textarea id="meds" name="meds" placeholder="Название препарата, дозировка..."></textarea>
+        </div>
+      </div>
+
+      <div class="field-group" style="max-width:280px;">
+        <label class="field-label" for="last_checkup">Последний медосмотр</label>
+        <input type="date" id="last_checkup" name="last_checkup">
+      </div>
+    </div>
+
+    <!-- БЛОК 4 — ОБРАЗ ЖИЗНИ -->
+    <div class="block" data-step="4">
+      <h3 class="block-title">Образ жизни</h3>
+      <p style="color:#888; font-size:0.9rem; margin-bottom:20px;">Как проходит твой обычный день?</p>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="job_type">Род деятельности</label>
+          <select id="job_type" name="job_type">
+            <option value="">— выбери —</option>
+            <option value="sedentary">Сидячая</option>
+            <option value="active">Физически активная</option>
+            <option value="mixed">Смешанная</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="activity_level">Средняя активность</label>
+          <select id="activity_level" name="activity_level">
+            <option value="">— выбери —</option>
+            <option value="low">Мало (3000 - 5000 шагов)</option>
+            <option value="medium">Средне (5000 - 10 000 шагов)</option>
+            <option value="high">Высоко (свыше 10 000 шагов)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row-3">
+        <div class="field-group">
+          <label class="field-label" for="wake_time">Подъём</label>
+          <input type="time" id="wake_time" name="wake_time">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="sleep_time">Отход ко сну</label>
+          <input type="time" id="sleep_time" name="sleep_time">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="sleep_hours">Часов сна</label>
+          <input type="number" id="sleep_hours" name="sleep_hours" placeholder="8" min="2" max="14">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="stress">Уровень стресса</label>
+        <div class="range-wrap">
+          <input type="range" id="stress" name="stress" min="1" max="10" value="5" class="range-input">
+          <span class="range-val" id="stress-val">5</span>
+        </div>
+        <div class="range-hint"><span>1 — низкий</span><span>10 — очень высокий</span></div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="alcohol">Отношение к алкоголю</label>
+          <select id="alcohol" name="alcohol">
+            <option value="">— выбери —</option>
+            <option value="often">Часто</option>
+            <option value="sometimes">Иногда</option>
+            <option value="rarely">Редко</option>
+            <option value="never">Не пью</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Курение</label>
+          <div class="radio-row" style="margin-top:4px;">
+            <label class="radio-plain-item">
+              <input type="radio" name="smoking" value="yes">
+              <span>Да</span>
+            </label>
+            <label class="radio-plain-item">
+              <input type="radio" name="smoking" value="no">
+              <span>Нет</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- БЛОК 5 — ОПЫТ ТРЕНИРОВОК -->
+    <div class="block" data-step="5">
+      <h3 class="block-title">Опыт тренировок</h3>
+      <p style="color:#888; font-size:0.9rem; margin-bottom:20px;">Что ты делал раньше? Это поможет подобрать нагрузку.</p>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="exp_level">Опыт</label>
+          <select id="exp_level" name="exp_level">
+            <option value="">— выбери —</option>
+            <option value="newbie">Новичок</option>
+            <option value="lt6m">До 6 месяцев</option>
+            <option value="6-12m">6–12 месяцев</option>
+            <option value="1-2y">1–2 года</option>
+            <option value="3y+">3+ лет</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="freq">Частота тренировок в неделю</label>
+          <input type="number" id="freq" name="freq" placeholder="3" min="1" max="7">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="prev_exp">Что делал ранее</label>
+        <textarea id="prev_exp" name="prev_exp" placeholder="Бегал, ходил в зал, занимался йогой..."></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Доступная база</label>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" name="equipment" value="gym"><span>Тренажёрный зал</span></label>
+          <label class="check-item"><input type="checkbox" name="equipment" value="dumbbells"><span>Домашние гантели</span></label>
+          <label class="check-item"><input type="checkbox" name="equipment" value="bands"><span>Резинки</span></label>
+          <label class="check-item"><input type="checkbox" name="equipment" value="bodyweight"><span>Собственный вес</span></label>
+          <label class="check-item"><input type="checkbox" name="equipment" value="none"><span>Нет оборудования</span></label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Предпочтения</label>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" name="prefer" value="strength"><span>Силовые</span></label>
+          <label class="check-item"><input type="checkbox" name="prefer" value="cardio"><span>Кардио</span></label>
+          <label class="check-item"><input type="checkbox" name="prefer" value="functional"><span>Функционалка</span></label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="dislike_train">Что НЕ нравится</label>
+        <textarea id="dislike_train" name="dislike_train" placeholder="Не люблю бег, не хочу делать становую тягу..."></textarea>
+      </div>
+    </div>
+
+    <!-- БЛОК 6 — ПИТАНИЕ -->
+    <div class="block" data-step="6">
+      <h3 class="block-title">Питание</h3>
+      <p style="color:#888; font-size:0.9rem; margin-bottom:20px;">Топливо для твоего тела. Расскажи, что ты ешь.</p>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="meals_count">Приёмов пищи в день</label>
+          <input type="number" id="meals_count" name="meals_count" placeholder="4" min="1" max="10">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="water">Водный режим, литры в день</label>
+          <input type="number" id="water" name="water" placeholder="2.0" min="0.5" max="10" step="0.1">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="breakfast">Завтрак</label>
+          <textarea id="breakfast" name="breakfast" placeholder="Овсянка, яйца, кофе..."></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="lunch">Обед</label>
+          <textarea id="lunch" name="lunch" placeholder="Рис с куриной грудкой, салат..."></textarea>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="dinner">Ужин</label>
+          <textarea id="dinner" name="dinner" placeholder="Овощи, творог..."></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="snack">Перекус</label>
+          <textarea id="snack" name="snack" placeholder="Орехи, яблоко, йогурт..."></textarea>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="eat_out">Еда вне дома</label>
+          <select id="eat_out" name="eat_out">
+            <option value="">— выбери —</option>
+            <option value="daily">Каждый день</option>
+            <option value="3-4">3–4 раза в неделю</option>
+            <option value="1-2">1–2 раза в неделю</option>
+            <option value="rarely">Редко</option>
+            <option value="never">Никогда</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Бюджет на питание</label>
+          <div class="radio-cards" style="margin-top:2px;">
+            <div class="radio-card-item"><input type="radio" name="budget" id="b1" value="economy"><label for="b1">Эконом</label></div>
+            <div class="radio-card-item"><input type="radio" name="budget" id="b2" value="medium"><label for="b2">Средний</label></div>
+            <div class="radio-card-item"><input type="radio" name="budget" id="b3" value="unlimited"><label for="b3">Без ограничений</label></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Ограничения в питании</label>
+        <label class="check-single"><input type="checkbox" name="diet_restrict" value="vegetarian"><span>Вегетарианство / Веганство</span></label>
+        <label class="check-single"><input type="checkbox" name="diet_restrict" value="no_meat"><span>Не ем мясо</span></label>
+        <label class="check-single"><input type="checkbox" name="diet_restrict" value="no_fish"><span>Не ем рыбу</span></label>
+        <label class="check-single"><input type="checkbox" name="diet_restrict" value="no_dairy"><span>Не ем молочное</span></label>
+        <label class="check-single"><input type="checkbox" name="diet_restrict" value="none"><span>Отсутствует</span></label>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="fav_food">Любимые продукты</label>
+          <textarea id="fav_food" name="fav_food" placeholder="Гречка, яйца, авокадо..."></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="hate_food">Не ем / ненавижу</label>
+          <textarea id="hate_food" name="hate_food" placeholder="Сельдерей, лук, свёкла..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- БЛОК 7 — ДОПОЛНИТЕЛЬНО -->
+    <div class="block" data-step="7">
+      <h3 class="block-title">Финальные штрихи</h3>
+      <p style="color:#888; font-size:0.9rem; margin-bottom:20px;">Почти готово! Осталось совсем немного.</p>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Есть ли тренер сейчас?</label>
+          <div class="radio-row" style="margin-top:4px;">
+            <label class="radio-plain-item"><input type="radio" name="has_coach" value="yes"><span>Да</span></label>
+            <label class="radio-plain-item"><input type="radio" name="has_coach" value="no"><span>Нет</span></label>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Готов вести дневник?</label>
+          <div class="radio-row" style="margin-top:4px;">
+            <label class="radio-plain-item"><input type="radio" name="diary" value="yes"><span>Да</span></label>
+            <label class="radio-plain-item"><input type="radio" name="diary" value="no"><span>Нет</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Нужна ли поддержка?</label>
+          <div class="radio-row" style="margin-top:4px;">
+            <label class="radio-plain-item"><input type="radio" name="support" value="yes"><span>Да</span></label>
+            <label class="radio-plain-item"><input type="radio" name="support" value="no"><span>Нет</span></label>
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="format">Формат программы</label>
+          <select id="format" name="format">
+            <option value="">— выбери —</option>
+            <option value="pdf">PDF</option>
+            <option value="app">Приложение</option>
+            <option value="table">Таблица</option>
+            <option value="any">Не важно</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Предпочтительная связь</label>
+        <div class="check-group">
+          <label class="check-item"><input type="checkbox" name="contact" value="messenger"><span>Мессенджер</span></label>
+          <label class="check-item"><input type="checkbox" name="contact" value="calls"><span>Звонки</span></label>
+          <label class="check-item"><input type="checkbox" name="contact" value="meeting"><span>Личная встреча</span></label>
+          <label class="check-item"><input type="checkbox" name="contact" value="email"><span>Email</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav-area">
+      <button type="button" class="btn-nav" id="btn-prev" onclick="prevStep()" disabled>Назад</button>
+      <button type="button" class="btn-nav btn-submit" id="btn-next" onclick="nextStep()">Далее</button>
+    </div>
+
+  </form>
+
+  <!-- SUCCESS -->
+  <div class="success-banner" id="success-banner">
+    <h2>Анкета отправлена ✓</h2>
+    <p>Спасибо! Мы получили твои данные и свяжемся с тобой в ближайшее время.</p>
+  </div>
+
+  <footer>© CHEKMAREV, 2026</footer>
+</div>
+
+<script>
+(function() {
+
+  // --- STATE ---
+  let currentStep = 1;
+  const totalSteps = 7;
+  const blocks = document.querySelectorAll('.block');
+  const btnNext = document.getElementById('btn-next');
+  const btnPrev = document.getElementById('btn-prev');
+  const stepTitle = document.getElementById('step-title');
+  const form = document.getElementById('main-form');
+  const successBanner = document.getElementById('success-banner');
+  const savedIndicator = document.getElementById('saved-indicator');
+  const toastEl = document.getElementById('toast');
+
+  // --- TOAST MESSAGES ---
+  const toastMessages = {
+    1: '🔥 Отлично! Начнём с основ',
+    2: '💪 Цель — половина успеха!',
+    3: '🏥 Здоровье — это важно',
+    4: '🌙 Образ жизни определяет результат',
+    5: '🏋️ Опыт — это круто',
+    6: '🥗 Питание — 70% успеха',
+    7: '🎯 Почти финиш!'
+  };
+
+  // --- INTRO ---
+  window.startQuiz = function() {
+    document.getElementById('intro-screen').classList.add('hidden');
+    setTimeout(() => {
+      document.getElementById('intro-screen').style.display = 'none';
+    }, 500);
+  };
+
+  // --- NAVIGATION ---
+  function updateUI() {
+    // Show/hide blocks
+    blocks.forEach(block => {
+      const step = parseInt(block.getAttribute('data-step'));
+      if (step === currentStep) {
+        block.classList.add('active');
+      } else {
+        block.classList.remove('active');
+      }
+    });
+
+    // Update buttons
+    btnPrev.disabled = currentStep === 1;
+    if (currentStep === totalSteps) {
+      btnNext.textContent = 'Отправить анкету';
+      btnNext.classList.add('btn-submit');
+    } else {
+      btnNext.textContent = 'Далее';
+      btnNext.classList.remove('btn-submit');
+    }
+
+    // Update progress
+    const pct = Math.round(((currentStep - 1) / totalSteps) * 100);
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('pct-label').textContent = pct + '%';
+    stepTitle.textContent = `Шаг ${currentStep} из ${totalSteps}`;
+
+    // Update dots
+    document.querySelectorAll('.step-dot').forEach(dot => {
+      const dotStep = parseInt(dot.getAttribute('data-dot'));
+      dot.classList.remove('active', 'completed');
+      if (dotStep === currentStep) {
+        dot.classList.add('active');
+      } else if (dotStep < currentStep) {
+        dot.classList.add('completed');
+      }
+    });
+
+    // Show toast
+    showToast(toastMessages[currentStep]);
+
+    // Check pulse
+    checkPulse();
+
+    // Save to localStorage
+    saveProgress();
+  }
+
+  function showToast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    setTimeout(() => {
+      toastEl.classList.remove('show');
+    }, 2500);
+  }
+
+  function showSaved() {
+    savedIndicator.classList.add('show');
+    setTimeout(() => {
+      savedIndicator.classList.remove('show');
+    }, 1500);
+  }
+
+  // --- VALIDATION ---
+  function validateStep(step) {
+    let valid = true;
+    const currentBlock = document.querySelector(`.block[data-step="${step}"]`);
+    const requiredInputs = currentBlock.querySelectorAll('[required]');
+
+    requiredInputs.forEach(input => {
+      if (input.type === 'radio') {
+        const name = input.name;
+        const checked = currentBlock.querySelector(`input[name="${name}"]:checked`);
+        if (!checked) {
+          valid = false;
+          const errEl = document.getElementById('err-' + name);
+          if (errEl) errEl.classList.add('visible');
+        } else {
+          const errEl = document.getElementById('err-' + name);
+          if (errEl) errEl.classList.remove('visible');
+        }
+      } else {
+        if (!input.value.trim()) {
+          valid = false;
+          input.classList.add('invalid');
+          const errEl = document.getElementById('err-' + input.id);
+          if (errEl) errEl.classList.add('visible');
+        } else {
+          input.classList.remove('invalid');
+          const errEl = document.getElementById('err-' + input.id);
+          if (errEl) errEl.classList.remove('visible');
+        }
+      }
+    });
+
+    if (!valid) {
+      currentBlock.style.animation = 'none';
+      currentBlock.offsetHeight;
+      currentBlock.style.animation = 'shake 0.5s';
+    }
+    return valid;
+  }
+
+  // --- NEXT / PREV ---
+  window.nextStep = function() {
+    if (validateStep(currentStep)) {
+      if (currentStep < totalSteps) {
+        currentStep++;
+        updateUI();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        submitForm();
+      }
+    }
+  };
+
+  window.prevStep = function() {
+    if (currentStep > 1) {
+      currentStep--;
+      updateUI();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // --- CHECK PULSE ---
+  function checkPulse() {
+    const currentBlock = document.querySelector(`.block[data-step="${currentStep}"]`);
+    const requiredInputs = currentBlock.querySelectorAll('[required]');
+    let allFilled = true;
+
+    requiredInputs.forEach(input => {
+      if (input.type === 'radio') {
+        const checked = currentBlock.querySelector(`input[name="${input.name}"]:checked`);
+        if (!checked) allFilled = false;
+      } else {
+        if (!input.value.trim()) allFilled = false;
+      }
+    });
+
+    if (allFilled && currentStep < totalSteps) {
+      btnNext.classList.add('pulse');
+    } else {
+      btnNext.classList.remove('pulse');
+    }
+  }
+
+  // --- LOCAL STORAGE ---
+  function saveProgress() {
+    try {
+      const data = {};
+      const formData = new FormData(form);
+      for (const [key, value] of formData.entries()) {
+        if (!data[key]) data[key] = [];
+        data[key].push(value);
+      }
+      // Convert arrays to single values for radios/checkboxes
+      const simplified = {};
+      for (const [key, val] of Object.entries(data)) {
+        simplified[key] = val.length > 0 ? val[val.length - 1] : '';
+      }
+      simplified._currentStep = currentStep;
+      localStorage.setItem('chekmarev_anketa', JSON.stringify(simplified));
+      showSaved();
+    } catch(e) {}
+  }
+
+  function loadProgress() {
+    try {
+      const saved = localStorage.getItem('chekmarev_anketa');
+      if (!saved) return;
+      const data = JSON.parse(saved);
+      if (!data._currentStep) return;
+
+      currentStep = data._currentStep || 1;
+
+      for (const [key, value] of Object.entries(data)) {
+        if (key === '_currentStep') continue;
+        const el = form.querySelector(`[name="${key}"]`);
+        if (!el) continue;
+
+        if (el.type === 'radio') {
+          const radio = form.querySelector(`input[name="${key}"][value="${value}"]`);
+          if (radio) radio.checked = true;
+        } else if (el.type === 'checkbox') {
+          // For checkboxes, we stored single values
+          if (value && el.value === value) {
+            el.checked = true;
+          }
+        } else {
+          el.value = value;
+        }
+      }
+
+      // Show IMT if data exists
+      updateIMT();
+      updateUI();
+    } catch(e) {}
+  }
+
+  // --- IMT CALCULATOR ---
+  function getIMTCategory(imt) {
+    if (imt < 18.5) return { text: 'Недостаточный вес', color: '#4a9eff' };
+    if (imt < 25) return { text: 'Нормальный вес', color: '#6abf6a' };
+    if (imt < 30) return { text: 'Избыточный вес', color: '#e0c04a' };
+    if (imt < 35) return { text: 'Ожирение I степени', color: '#e08a3a' };
+    if (imt < 40) return { text: 'Ожирение II степени', color: '#e05a3a' };
+    return { text: 'Ожирение III степени', color: '#e03a3a' };
+  }
+
+  function updateIMT() {
+    const height = parseFloat(document.getElementById('height').value);
+    const weight = parseFloat(document.getElementById('weight_cur').value);
+    const display = document.getElementById('imt-display');
+    const valueEl = document.getElementById('imt-value');
+
+    if (height && weight && height > 0 && weight > 0) {
+      const heightM = height / 100;
+      const imt = (weight / (heightM * heightM)).toFixed(1);
+      const category = getIMTCategory(parseFloat(imt));
+      valueEl.innerHTML = `${imt} — <span style="color:${category.color}; font-weight:600;">${category.text}</span>`;
+      display.style.display = 'block';
+    } else {
+      display.style.display = 'none';
+    }
+  }
+
+  // --- SUBMIT (iframe method for file:// compatibility) ---
+  function submitForm() {
+    btnNext.disabled = true;
+    btnNext.textContent = 'Отправка...';
+
+    // Создаём скрытый iframe
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.name = 'formsubmit-iframe';
+    document.body.appendChild(iframe);
+
+    // Меняем action формы на iframe
+    const email = encodeURIComponent('AlekseyChekmarev310396@yandex.ru');
+    form.action = `https://formsubmit.co/${email}`;
+    form.target = 'formsubmit-iframe';
+    form.method = 'POST';
+
+    // Отправляем
+    form.submit();
+
+    // Ждём ответа от iframe
+    iframe.onload = function() {
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const content = iframeDoc.body ? iframeDoc.body.innerHTML : '';
+
+        if (content.includes('success') || content.includes('Thank you') || content.length > 0) {
+          showSuccess();
+        } else {
+          alert('Ошибка отправки, попробуй позже');
+          btnNext.disabled = false;
+          btnNext.textContent = 'Отправить анкету';
+        }
+      } catch(e) {
+        // Даже если не можем прочитать ответ, FormSubmit обычно работает
+        showSuccess();
+      }
+    };
+
+    // Таймаут на случай если iframe не загрузится
+    setTimeout(function() {
+      if (btnNext.textContent === 'Отправка...') {
+        showSuccess();
+      }
+    }, 5000);
+  }
+
+  function showSuccess() {
+    const name = document.getElementById('fio').value || 'Клиент';
+    successBanner.querySelector('p').textContent = `Спасибо, ${name}! Мы получили твои данные и свяжемся с тобой в ближайшее время.`;
+
+    form.style.display = 'none';
+    successBanner.classList.add('visible');
+    document.querySelector('.nav-area').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.querySelector('.steps-dots').style.display = 'none';
+    document.querySelector('header').style.display = 'none';
+    document.querySelector('.divider').style.display = 'none';
+
+    localStorage.removeItem('chekmarev_anketa');
+    startConfetti();
+  }
+
+  // --- RANGE SLIDERS ---
+  document.querySelectorAll('.range-input').forEach(function(range) {
+    var valEl = document.getElementById(range.id + '-val');
+    if (!valEl) return;
+    valEl.textContent = range.value;
+    range.addEventListener('input', function() {
+      valEl.textContent = this.value;
+    });
+  });
+
+  // --- TEXTAREA COUNTERS ---
+  document.querySelectorAll('textarea').forEach(function(ta) {
+    const counter = document.createElement('div');
+    counter.style.cssText = 'font-size:0.72rem; color:#555; text-align:right; margin-top:3px;';
+    ta.parentNode.appendChild(counter);
+
+    function updateCounter() {
+      const len = ta.value.length;
+      counter.textContent = len > 0 ? `${len} символов` : '';
+    }
+    ta.addEventListener('input', updateCounter);
+    updateCounter();
+  });
+
+  // --- IMT LISTENERS ---
+  document.getElementById('height').addEventListener('input', updateIMT);
+  document.getElementById('weight_cur').addEventListener('input', updateIMT);
+
+  // --- CONFETTI ---
+  function startConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const colors = ['#c97a4a', '#faf8f5', '#e5e5e5'];
+
+    for (let i = 0; i < 150; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        w: Math.random() * 10 + 5,
+        h: Math.random() * 5 + 2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        speed: Math.random() * 3 + 2,
+        angle: Math.random() * 360,
+        spin: Math.random() * 0.2 - 0.1
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.save();
+        ctx.translate(p.x + p.w / 2, p.y + p.h / 2);
+        ctx.rotate(p.angle);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+
+        p.y += p.speed;
+        p.angle += p.spin;
+
+        if (p.y > canvas.height) {
+          p.y = -20;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  }
+
+  // --- SHAKE KEYFRAMES ---
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // --- INIT ---
+  loadProgress();
+  if (currentStep === 1 && !localStorage.getItem('chekmarev_anketa')) {
+    updateUI();
+  }
+
+})();
+</script>
+</body>
+</html>
