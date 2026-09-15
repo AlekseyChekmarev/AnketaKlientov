@@ -435,39 +435,6 @@ input[type="range"]::-moz-range-thumb {
   color: #ccc;
 }
 
-/* CHECKMARK */
-.checkmark-icon {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  margin-left: 6px;
-  vertical-align: middle;
-}
-.checkmark-icon circle {
-  fill: none;
-  stroke: #6abf6a;
-  stroke-width: 2;
-  stroke-dasharray: 60;
-  stroke-dashoffset: 60;
-  animation: drawCircle 0.6s ease forwards;
-}
-.checkmark-icon path {
-  fill: none;
-  stroke: #6abf6a;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 20;
-  stroke-dashoffset: 20;
-  animation: drawCheck 0.4s ease 0.4s forwards;
-}
-@keyframes drawCircle {
-  to { stroke-dashoffset: 0; }
-}
-@keyframes drawCheck {
-  to { stroke-dashoffset: 0; }
-}
-
 /* SAVED INDICATOR */
 .saved-indicator {
   position: fixed;
@@ -669,6 +636,52 @@ footer {
   .btn-nav, .btn-submit { width: 100%; }
   .radio-cards { gap: 7px; }
   .intro-slogan { font-size: 1.3rem; }
+  
+  /* Мобильная оптимизация полей */
+  input[type="text"],
+  input[type="number"],
+  input[type="date"],
+  input[type="time"],
+  select,
+  textarea {
+    font-size: 16px; /* Предотвращает зум на iOS */
+    padding: 12px 14px;
+  }
+  
+  /* Увеличенные радиокнопки и чекбоксы */
+  .radio-plain-item input[type="radio"] {
+    width: 20px;
+    height: 20px;
+  }
+  .check-item input[type="checkbox"],
+  .check-single input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+  }
+  
+  /* Радиокнопки-карточки */
+  .radio-card-item label {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+  }
+  
+  /* Чекбоксы */
+  .check-item {
+    padding: 10px 14px;
+  }
+  
+  /* Слайдеры */
+  input[type="range"] {
+    height: 6px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
