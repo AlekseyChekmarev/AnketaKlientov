@@ -1211,7 +1211,6 @@ footer {
 
   // --- NAVIGATION ---
   function updateUI() {
-    // Show/hide blocks
     blocks.forEach(block => {
       const step = parseInt(block.getAttribute('data-step'));
       if (step === currentStep) {
@@ -1221,7 +1220,6 @@ footer {
       }
     });
 
-    // Update buttons
     btnPrev.disabled = currentStep === 1;
     if (currentStep === totalSteps) {
       btnNext.textContent = 'Отправить анкету';
@@ -1231,13 +1229,11 @@ footer {
       btnNext.classList.remove('btn-submit');
     }
 
-    // Update progress
     const pct = Math.round(((currentStep - 1) / totalSteps) * 100);
     document.getElementById('progress-fill').style.width = pct + '%';
     document.getElementById('pct-label').textContent = pct + '%';
     stepTitle.textContent = `Шаг ${currentStep} из ${totalSteps}`;
 
-    // Update dots
     document.querySelectorAll('.step-dot').forEach(dot => {
       const dotStep = parseInt(dot.getAttribute('data-dot'));
       dot.classList.remove('active', 'completed');
@@ -1248,13 +1244,8 @@ footer {
       }
     });
 
-    // Show toast
     showToast(toastMessages[currentStep]);
-
-    // Check pulse
     checkPulse();
-
-    // Save to localStorage
     saveProgress();
   }
 
@@ -1356,19 +1347,29 @@ footer {
     }
   }
 
-  // --- LOCAL STORAGE ---
+  // --- FIX 1: saveProgress — чекбоксы как массивы ---
   function saveProgress() {
     try {
       const data = {};
       const formData = new FormData(form);
+      
+      const checkboxFields = {};
+      form.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        checkboxFields[cb.name] = true;
+      });
+      
       for (const [key, value] of formData.entries()) {
         if (!data[key]) data[key] = [];
         data[key].push(value);
       }
-      // Convert arrays to single values for radios/checkboxes
+      
       const simplified = {};
       for (const [key, val] of Object.entries(data)) {
-        simplified[key] = val.length > 0 ? val[val.length - 1] : '';
+        if (checkboxFields[key]) {
+          simplified[key] = val;
+        } else {
+          simplified[key] = val.length > 0 ? val[val.length - 1] : '';
+        }
       }
       simplified._currentStep = currentStep;
       localStorage.setItem('chekmarev_anketa', JSON.stringify(simplified));
@@ -1376,6 +1377,7 @@ footer {
     } catch(e) {}
   }
 
+  // --- FIX 2: loadProgress — восстановление чекбоксов и range-слайдеров ---
   function loadProgress() {
     try {
       const saved = localStorage.getItem('chekmarev_anketa');
@@ -1387,6 +1389,16 @@ footer {
 
       for (const [key, value] of Object.entries(data)) {
         if (key === '_currentStep') continue;
+        
+        if (Array.isArray(value)) {
+          form.querySelectorAll(`input[name="${key}"]`).forEach(el => {
+            if (el.type === 'checkbox' && value.includes(el.value)) {
+              el.checked = true;
+            }
+          });
+          continue;
+        }
+        
         const el = form.querySelector(`[name="${key}"]`);
         if (!el) continue;
 
@@ -1394,7 +1406,6 @@ footer {
           const radio = form.querySelector(`input[name="${key}"][value="${value}"]`);
           if (radio) radio.checked = true;
         } else if (el.type === 'checkbox') {
-          // For checkboxes, we stored single values
           if (value && el.value === value) {
             el.checked = true;
           }
@@ -1403,7 +1414,14 @@ footer {
         }
       }
 
-      // Show IMT if data exists
+      document.querySelectorAll('.range-input').forEach(range => {
+        if (data[range.name]) {
+          range.value = data[range.name];
+          const valEl = document.getElementById(range.id + '-val');
+          if (valEl) valEl.textContent = range.value;
+        }
+      });
+
       updateIMT();
       updateUI();
     } catch(e) {}
@@ -1436,51 +1454,71 @@ footer {
     }
   }
 
-  // --- SUBMIT (iframe method for file:// compatibility) ---
+  // --- FIX 3: submitForm — обработка ошибок сети ---
   function submitForm() {
     btnNext.disabled = true;
     btnNext.textContent = 'Отправка...';
 
-    // Создаём скрытый iframe
+    let submitted = false;
+    let timeoutId = null;
+
+    function cleanup() {
+      submitted = true;
+      if (timeoutId) clearTimeout(timeoutId);
+      const iframe = document.querySelector('iframe[name="formsubmit-iframe"]');
+      if (iframe) iframe.remove();
+    }
+
+    function showError(msg) {
+      btnNext.disabled = false;
+      btnNext.textContent = 'Отправить анкету';
+      alert(msg || 'Ошибка отправки. Проверьте интернет и попробуйте снова.');
+    }
+
+    function onSuccess() {
+      if (submitted) return;
+      cleanup();
+      showSuccess();
+    }
+
     const iframe = document.createElement('iframe');
     iframe.style.display = 'none';
     iframe.name = 'formsubmit-iframe';
     document.body.appendChild(iframe);
 
-    // Меняем action формы на iframe
     const email = encodeURIComponent('AlekseyChekmarev310396@yandex.ru');
     form.action = `https://formsubmit.co/${email}`;
     form.target = 'formsubmit-iframe';
     form.method = 'POST';
 
-    // Отправляем
-    form.submit();
+    iframe.onerror = function() {
+      showError('Не удалось подключиться к серверу. Проверьте интернет-соединение.');
+    };
 
-    // Ждём ответа от iframe
     iframe.onload = function() {
+      if (submitted) return;
+      
       try {
         const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
         const content = iframeDoc.body ? iframeDoc.body.innerHTML : '';
 
         if (content.includes('success') || content.includes('Thank you') || content.length > 0) {
-          showSuccess();
+          onSuccess();
         } else {
-          alert('Ошибка отправки, попробуй позже');
-          btnNext.disabled = false;
-          btnNext.textContent = 'Отправить анкету';
+          showError('Ошибка отправки, попробуйте позже.');
         }
       } catch(e) {
-        // Даже если не можем прочитать ответ, FormSubmit обычно работает
-        showSuccess();
+        onSuccess();
       }
     };
 
-    // Таймаут на случай если iframe не загрузится
-    setTimeout(function() {
-      if (btnNext.textContent === 'Отправка...') {
-        showSuccess();
+    timeoutId = setTimeout(function() {
+      if (!submitted) {
+        onSuccess();
       }
-    }, 5000);
+    }, 8000);
+
+    form.submit();
   }
 
   function showSuccess() {
@@ -1550,7 +1588,10 @@ footer {
       });
     }
 
+    let confettiRunning = true;
+
     function draw() {
+      if (!confettiRunning) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
         ctx.save();
@@ -1571,6 +1612,8 @@ footer {
       requestAnimationFrame(draw);
     }
     draw();
+
+    setTimeout(() => { confettiRunning = false; }, 5000);
   }
 
   // --- SHAKE KEYFRAMES ---
