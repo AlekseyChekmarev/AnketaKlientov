@@ -966,6 +966,7 @@ footer {
               <span>Нет</span>
             </label>
           </div>
+          <span class="field-error" id="err-smoking">Выбери ответ</span>
         </div>
       </div>
     </div>
@@ -1117,6 +1118,7 @@ footer {
             <label class="radio-plain-item"><input type="radio" name="has_coach" value="yes"><span>Да</span></label>
             <label class="radio-plain-item"><input type="radio" name="has_coach" value="no"><span>Нет</span></label>
           </div>
+          <span class="field-error" id="err-has_coach">Выбери ответ</span>
         </div>
         <div class="field-group">
           <label class="field-label">Готов вести дневник?</label>
@@ -1124,6 +1126,7 @@ footer {
             <label class="radio-plain-item"><input type="radio" name="diary" value="yes"><span>Да</span></label>
             <label class="radio-plain-item"><input type="radio" name="diary" value="no"><span>Нет</span></label>
           </div>
+          <span class="field-error" id="err-diary">Выбери ответ</span>
         </div>
       </div>
 
@@ -1134,6 +1137,7 @@ footer {
             <label class="radio-plain-item"><input type="radio" name="support" value="yes"><span>Да</span></label>
             <label class="radio-plain-item"><input type="radio" name="support" value="no"><span>Нет</span></label>
           </div>
+          <span class="field-error" id="err-support">Выбери ответ</span>
         </div>
         <div class="field-group">
           <label class="field-label" for="format">Формат программы</label>
@@ -1246,7 +1250,7 @@ footer {
 
     showToast(toastMessages[currentStep]);
     checkPulse();
-    saveProgress();
+    saveProgressDebounced();
   }
 
   function showToast(msg) {
@@ -1262,6 +1266,51 @@ footer {
     setTimeout(() => {
       savedIndicator.classList.remove('show');
     }, 1500);
+  }
+
+  // --- PHONE MASK ---
+  function initPhoneMask() {
+    const phoneInput = document.getElementById('phone');
+    if (!phoneInput) return;
+
+    phoneInput.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      
+      // Если начинается с 8, заменяем на 7
+      if (value.startsWith('8') && value.length > 1) {
+        value = '7' + value.substring(1);
+      }
+      // Если не начинается с 7, добавляем
+      if (value.length > 0 && !value.startsWith('7')) {
+        value = '7' + value;
+      }
+
+      let formatted = '';
+      if (value.length > 0) {
+        formatted = '+' + value[0];
+      }
+      if (value.length > 1) {
+        formatted += ' (' + value.substring(1, 4);
+      }
+      if (value.length >= 4) {
+        formatted += ') ' + value.substring(4, 7);
+      }
+      if (value.length >= 7) {
+        formatted += '-' + value.substring(7, 9);
+      }
+      if (value.length >= 9) {
+        formatted += '-' + value.substring(9, 11);
+      }
+
+      e.target.value = formatted;
+    });
+
+    // Убираем валидацию при вводе
+    phoneInput.addEventListener('focus', function() {
+      this.classList.remove('invalid');
+      const errEl = document.getElementById('err-phone');
+      if (errEl) errEl.classList.remove('visible');
+    });
   }
 
   // --- VALIDATION ---
@@ -1295,6 +1344,20 @@ footer {
         }
       }
     });
+
+    // Валидация телефона — формат
+    if (step === 1) {
+      const phoneInput = document.getElementById('phone');
+      if (phoneInput && phoneInput.value) {
+        const digits = phoneInput.value.replace(/\D/g, '');
+        if (digits.length < 11) {
+          valid = false;
+          phoneInput.classList.add('invalid');
+          const errEl = document.getElementById('err-phone');
+          if (errEl) errEl.classList.add('visible');
+        }
+      }
+    }
 
     if (!valid) {
       currentBlock.style.animation = 'none';
@@ -1347,7 +1410,16 @@ footer {
     }
   }
 
-  // --- FIX 1: saveProgress — чекбоксы как массивы ---
+  // --- DEBOUNCE ---
+  let saveTimeout = null;
+  function saveProgressDebounced() {
+    if (saveTimeout) clearTimeout(saveTimeout);
+    saveTimeout = setTimeout(() => {
+      saveProgress();
+    }, 500);
+  }
+
+  // --- saveProgress ---
   function saveProgress() {
     try {
       const data = {};
@@ -1377,7 +1449,7 @@ footer {
     } catch(e) {}
   }
 
-  // --- FIX 2: loadProgress — восстановление чекбоксов и range-слайдеров ---
+  // --- loadProgress ---
   function loadProgress() {
     try {
       const saved = localStorage.getItem('chekmarev_anketa');
@@ -1454,71 +1526,45 @@ footer {
     }
   }
 
-  // --- FIX 3: submitForm — обработка ошибок сети ---
+  // --- FIX: submitForm — fetch вместо form.submit() ---
   function submitForm() {
     btnNext.disabled = true;
     btnNext.textContent = 'Отправка...';
 
-    let submitted = false;
-    let timeoutId = null;
+    const formData = new FormData(form);
+    const data = {};
+    formData.forEach((value, key) => {
+      if (!data[key]) data[key] = [];
+      data[key].push(value);
+    });
 
-    function cleanup() {
-      submitted = true;
-      if (timeoutId) clearTimeout(timeoutId);
-      const iframe = document.querySelector('iframe[name="formsubmit-iframe"]');
-      if (iframe) iframe.remove();
+    // Убираем дубликаты из массивов
+    for (const key of Object.keys(data)) {
+      if (Array.isArray(data[key])) {
+        data[key] = [...new Set(data[key])];
+      }
     }
 
-    function showError(msg) {
+    fetch('https://formsubmit.co/ajax/AlekseyChekmarev310396@yandex.ru', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Network error');
+      return response.json();
+    })
+    .then(() => {
+      showSuccess();
+    })
+    .catch(() => {
       btnNext.disabled = false;
       btnNext.textContent = 'Отправить анкету';
-      alert(msg || 'Ошибка отправки. Проверьте интернет и попробуйте снова.');
-    }
-
-    function onSuccess() {
-      if (submitted) return;
-      cleanup();
-      showSuccess();
-    }
-
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.name = 'formsubmit-iframe';
-    document.body.appendChild(iframe);
-
-    const email = encodeURIComponent('AlekseyChekmarev310396@yandex.ru');
-    form.action = `https://formsubmit.co/${email}`;
-    form.target = 'formsubmit-iframe';
-    form.method = 'POST';
-
-    iframe.onerror = function() {
-      showError('Не удалось подключиться к серверу. Проверьте интернет-соединение.');
-    };
-
-    iframe.onload = function() {
-      if (submitted) return;
-      
-      try {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        const content = iframeDoc.body ? iframeDoc.body.innerHTML : '';
-
-        if (content.includes('success') || content.includes('Thank you') || content.length > 0) {
-          onSuccess();
-        } else {
-          showError('Ошибка отправки, попробуйте позже.');
-        }
-      } catch(e) {
-        onSuccess();
-      }
-    };
-
-    timeoutId = setTimeout(function() {
-      if (!submitted) {
-        onSuccess();
-      }
-    }, 8000);
-
-    form.submit();
+      alert('Ошибка отправки. Проверьте интернет и попробуйте снова.');
+    });
   }
 
   function showSuccess() {
@@ -1628,6 +1674,7 @@ footer {
   document.head.appendChild(style);
 
   // --- INIT ---
+  initPhoneMask();
   loadProgress();
   if (currentStep === 1 && !localStorage.getItem('chekmarev_anketa')) {
     updateUI();
