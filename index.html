@@ -276,6 +276,48 @@ header {
   margin: 0 0 22px;
 }
 
+/* ===== REVIEW BLOCK ===== */
+.review-section {
+  margin-bottom: 16px;
+}
+.review-section-title {
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 0.78rem;
+  color: #c97a4a;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #1e1c1a;
+}
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed #1e1c1a;
+  font-size: 0.88rem;
+}
+.review-row:last-child {
+  border-bottom: none;
+}
+.review-label {
+  color: #8a8580;
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+}
+.review-value {
+  color: #d9d4cf;
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 500;
+  text-align: right;
+  max-width: 60%;
+  word-break: break-word;
+}
+.review-value.empty {
+  color: #474440;
+  font-style: italic;
+}
+
 /* ===== SAVED INDICATOR ===== */
 .saved-badge {
   position: fixed;
@@ -685,7 +727,7 @@ input[type="range"]::-moz-range-thumb {
 @keyframes pulse {
   0%   { box-shadow: 0 0 0 0 rgba(201,122,74,0.55); }
   70%  { box-shadow: 0 0 0 11px rgba(201,122,74,0); }
-  100% { box-shadow: 0 0 0 0 rgba(201,122,74,0); }
+  100%  { box-shadow: 0 0 0 0 rgba(201,122,74,0); }
 }
 
 /* ===== SUCCESS ===== */
@@ -783,6 +825,8 @@ footer {
   input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; }
   .chip-item label { padding: 10px 15px; font-size: 0.93rem; }
   .intro-wordmark { font-size: clamp(1.4rem, 8vw, 2rem); }
+  .review-row { flex-direction: column; gap: 2px; }
+  .review-value { text-align: left; max-width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -819,12 +863,12 @@ footer {
   <!-- HEADER -->
   <header id="hdr">
     <div class="logo">CHEK<em>MAREV</em></div>
-    <div class="step-label" id="step-lbl">Шаг 1 из 7</div>
+    <div class="step-label" id="step-lbl">Шаг 1 из 8</div>
   </header>
   <div class="rule" id="hdr-rule"></div>
 
   <!-- PROGRESS -->
-  <div class="progress-wrap" id="progress-wrap">
+  <div class="progress-wrap" id="progress-wrap" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
     <div class="progress-meta">
       <span class="progress-caption">Заполнено</span>
       <span class="progress-pct" id="pct-lbl">0%</span>
@@ -843,6 +887,7 @@ footer {
     <div class="dot"     data-dot="5"></div>
     <div class="dot"     data-dot="6"></div>
     <div class="dot"     data-dot="7"></div>
+    <div class="dot"     data-dot="8"></div>
   </div>
 
   <!-- FORM -->
@@ -852,40 +897,34 @@ footer {
     <input type="hidden" name="_captcha" value="false">
     <input type="text"   name="_honey" style="display:none" tabindex="-1" autocomplete="off">
 
-    <!-- STEP 1 — ОБЩИЕ ДАННЫЕ -->
+    <!-- STEP 1 — ОБЩИЕ ДАННЫЕ (email удалён) -->
     <div class="block active" data-step="1">
       <h3 class="block-heading">Общие данные</h3>
       <p class="block-sub">Давай начнём с основ. Расскажи немного о себе.</p>
 
       <div class="fg">
         <label class="lbl" for="fio">ФИО <span class="req">*</span></label>
-        <input type="text" id="fio" name="fio" placeholder="Иванов Иван Иванович" required autocomplete="name">
+        <input type="text" id="fio" name="fio" placeholder="Иванов Иван Иванович" required autocomplete="name" aria-describedby="err-fio">
         <span class="ferr" id="err-fio">Заполни это поле</span>
       </div>
 
       <div class="row-2">
         <div class="fg">
           <label class="lbl" for="phone">Телефон <span class="req">*</span></label>
-          <input type="text" id="phone" name="phone" placeholder="+7 (999) 123-45-67" required autocomplete="tel">
+          <input type="text" id="phone" name="phone" placeholder="+7 (999) 123-45-67" required autocomplete="tel" inputmode="tel" aria-describedby="err-phone">
           <span class="ferr" id="err-phone">Укажи номер телефона</span>
         </div>
         <div class="fg">
           <label class="lbl" for="city">Город <span class="req">*</span></label>
-          <input type="text" id="city" name="city" placeholder="Москва" required>
+          <input type="text" id="city" name="city" placeholder="Москва" required autocomplete="address-level2" aria-describedby="err-city">
           <span class="ferr" id="err-city">Укажи город</span>
         </div>
-      </div>
-
-      <div class="fg">
-        <label class="lbl" for="email">Email <span class="req">*</span></label>
-        <input type="email" id="email" name="email" placeholder="example@mail.ru" required autocomplete="email">
-        <span class="ferr" id="err-email">Введи корректный email</span>
       </div>
 
       <div class="row-2">
         <div class="fg">
           <label class="lbl" for="age">Возраст <span class="req">*</span></label>
-          <input type="number" id="age" name="age" placeholder="25" min="14" max="80" required>
+          <input type="number" id="age" name="age" placeholder="25" min="14" max="80" required autocomplete="bday" inputmode="numeric" aria-describedby="err-age">
           <span class="ferr" id="err-age">Укажи возраст</span>
         </div>
         <div class="fg">
@@ -901,17 +940,17 @@ footer {
       <div class="row-3">
         <div class="fg">
           <label class="lbl" for="height">Рост, см <span class="req">*</span></label>
-          <input type="number" id="height" name="height" placeholder="175" min="100" max="250" required>
+          <input type="number" id="height" name="height" placeholder="175" min="100" max="250" required inputmode="numeric" aria-describedby="err-height">
           <span class="ferr" id="err-height">Укажи рост</span>
         </div>
         <div class="fg">
           <label class="lbl" for="weight_cur">Вес сейчас, кг <span class="req">*</span></label>
-          <input type="number" id="weight_cur" name="weight_cur" placeholder="75" min="30" max="300" required>
+          <input type="number" id="weight_cur" name="weight_cur" placeholder="75" min="30" max="300" required inputmode="numeric" aria-describedby="err-weight_cur">
           <span class="ferr" id="err-weight_cur">Укажи вес</span>
         </div>
         <div class="fg">
           <label class="lbl" for="weight_goal">Желаемый вес, кг</label>
-          <input type="number" id="weight_goal" name="weight_goal" placeholder="70" min="30" max="300">
+          <input type="number" id="weight_goal" name="weight_goal" placeholder="70" min="30" max="300" inputmode="numeric">
         </div>
       </div>
 
@@ -972,7 +1011,7 @@ footer {
         </div>
         <div class="fg">
           <label class="lbl" for="injuries">Травмы и ограничения <span class="req">*</span></label>
-          <textarea id="injuries" name="injuries" placeholder="Травма колена, проблемы со спиной..." required></textarea>
+          <textarea id="injuries" name="injuries" placeholder="Травма колена, проблемы со спиной..." required aria-describedby="err-injuries"></textarea>
           <span class="ferr" id="err-injuries">Заполни это поле</span>
         </div>
       </div>
@@ -1031,7 +1070,7 @@ footer {
         </div>
         <div class="fg">
           <label class="lbl" for="sleep_hours">Часов сна</label>
-          <input type="number" id="sleep_hours" name="sleep_hours" placeholder="8" min="2" max="14">
+          <input type="number" id="sleep_hours" name="sleep_hours" placeholder="8" min="2" max="14" inputmode="numeric">
         </div>
       </div>
 
@@ -1084,7 +1123,7 @@ footer {
         </div>
         <div class="fg">
           <label class="lbl" for="freq">Тренировок в неделю</label>
-          <input type="number" id="freq" name="freq" placeholder="3" min="1" max="7">
+          <input type="number" id="freq" name="freq" placeholder="3" min="1" max="7" inputmode="numeric">
         </div>
       </div>
 
@@ -1127,11 +1166,11 @@ footer {
       <div class="row-2">
         <div class="fg">
           <label class="lbl" for="meals_count">Приёмов пищи в день</label>
-          <input type="number" id="meals_count" name="meals_count" placeholder="4" min="1" max="10">
+          <input type="number" id="meals_count" name="meals_count" placeholder="4" min="1" max="10" inputmode="numeric">
         </div>
         <div class="fg">
           <label class="lbl" for="water">Вода, л/день</label>
-          <input type="number" id="water" name="water" placeholder="2.0" min="0.5" max="10" step="0.1">
+          <input type="number" id="water" name="water" placeholder="2.0" min="0.5" max="10" step="0.1" inputmode="decimal">
         </div>
       </div>
 
@@ -1253,6 +1292,13 @@ footer {
       </div>
     </div>
 
+    <!-- STEP 8 — ПРОВЕРКА ДАННЫХ -->
+    <div class="block" data-step="8">
+      <h3 class="block-heading">Проверка данных</h3>
+      <p class="block-sub">Проверь, всё ли заполнено верно. Если нужно что-то исправить — вернись назад.</p>
+      <div id="review-container"></div>
+    </div>
+
   </form>
 
   <!-- NAV -->
@@ -1279,7 +1325,7 @@ footer {
   var FORM_URL  = 'https://formsubmit.co/' + FORMSUBMIT_EMAIL;
 
   var step = 1;
-  var totalSteps = 7;
+  var totalSteps = 8;
   var submitting = false;
 
   var form        = document.getElementById('main-form');
@@ -1292,6 +1338,7 @@ footer {
   var navArea     = document.getElementById('nav-area');
   var savedBadge  = document.getElementById('saved-badge');
   var toastEl     = document.getElementById('toast');
+  var progressWrap = document.getElementById('progress-wrap');
 
   var toastMap = {
     1: '🔥 Начнём с основ',
@@ -1300,7 +1347,8 @@ footer {
     4: '🌙 Образ жизни — ключ к результату',
     5: '🏋️ Твой опыт важен',
     6: '🥗 Питание — 70% успеха',
-    7: '🎯 Финальный шаг!'
+    7: '🎯 Финальные штрихи',
+    8: '🔍 Проверь данные перед отправкой'
   };
 
   /* ---- INTRO ---- */
@@ -1340,12 +1388,25 @@ footer {
     });
 
     btnPrev.disabled = (step === 1);
-    btnNext.textContent = (step === totalSteps) ? 'Отправить анкету' : 'Далее';
+    
+    // На шаге 8 — кнопка «Отправить анкету»
+    if (step === totalSteps) {
+      btnNext.textContent = 'Отправить анкету';
+      btnNext.classList.remove('pulse');
+    } else {
+      btnNext.textContent = 'Далее';
+      checkPulse();
+    }
 
-    var pct = Math.round(((step - 1) / totalSteps) * 100);
+    var pct = Math.round(((step - 1) / (totalSteps - 1)) * 100);
     progFill.style.width = pct + '%';
     pctLbl.textContent = pct + '%';
     stepLbl.textContent = 'Шаг ' + step + ' из ' + totalSteps;
+    
+    // Update ARIA progress
+    if (progressWrap) {
+      progressWrap.setAttribute('aria-valuenow', pct);
+    }
 
     document.querySelectorAll('.dot').forEach(function (d) {
       var ds = parseInt(d.getAttribute('data-dot'), 10);
@@ -1355,7 +1416,12 @@ footer {
     });
 
     showToast(toastMap[step]);
-    checkPulse();
+    
+    // На шаге 8 — собрать и показать обзор
+    if (step === totalSteps) {
+      populateReview();
+    }
+    
     debounceSave();
   }
 
@@ -1428,16 +1494,6 @@ footer {
           if (eag) { eag.textContent = 'Возраст от 14 до 80 лет'; eag.classList.add('on'); }
         }
       }
-      var em = document.getElementById('email');
-      if (em && em.value) {
-        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(em.value)) {
-          valid = false;
-          em.classList.add('bad');
-          var eem = document.getElementById('err-email');
-          if (eem) { eem.textContent = 'Введи корректный email'; eem.classList.add('on'); }
-        }
-      }
     }
 
     if (!valid) {
@@ -1452,8 +1508,8 @@ footer {
   /* ---- NAV ---- */
   btnNext.addEventListener('click', function () {
     if (submitting) return;
-    if (!validateStep(step)) return;
     if (step < totalSteps) {
+      if (!validateStep(step)) return;
       step++;
       updateUI();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1588,6 +1644,158 @@ footer {
     });
   });
 
+  /* ---- REVIEW (STEP 8) ---- */
+  var stepTitles = {
+    1: 'Общие данные',
+    2: 'Твоя цель',
+    3: 'Здоровье',
+    4: 'Образ жизни',
+    5: 'Опыт тренировок',
+    6: 'Питание',
+    7: 'Финальные штрихи'
+  };
+  
+  var fieldLabels = {
+    fio: 'ФИО',
+    phone: 'Телефон',
+    city: 'Город',
+    age: 'Возраст',
+    gender: 'Пол',
+    height: 'Рост, см',
+    weight_cur: 'Вес сейчас, кг',
+    weight_goal: 'Желаемый вес, кг',
+    goal: 'Основная цель',
+    deadline: 'Сроки',
+    motivation: 'Уровень мотивации',
+    diseases: 'Хронические заболевания',
+    injuries: 'Травмы и ограничения',
+    allergies: 'Пищевые аллергии',
+    meds: 'Приём лекарств',
+    last_checkup: 'Последний медосмотр',
+    job_type: 'Род деятельности',
+    activity_level: 'Средняя активность',
+    wake_time: 'Подъём',
+    sleep_time: 'Отход ко сну',
+    sleep_hours: 'Часов сна',
+    stress: 'Уровень стресса',
+    alcohol: 'Отношение к алкоголю',
+    smoking: 'Курение',
+    exp_level: 'Опыт',
+    freq: 'Тренировок в неделю',
+    prev_exp: 'Что делал ранее',
+    equipment: 'Доступная база',
+    prefer: 'Предпочтения',
+    dislike_train: 'Что НЕ нравится',
+    meals_count: 'Приёмов пищи в день',
+    water: 'Вода, л/день',
+    breakfast: 'Завтрак',
+    lunch: 'Обед',
+    dinner: 'Ужин',
+    snack: 'Перекус',
+    eat_out: 'Еда вне дома',
+    budget: 'Бюджет на питание',
+    diet_restrict: 'Ограничения в питании',
+    fav_food: 'Любимые продукты',
+    hate_food: 'Не ем / ненавижу',
+    has_coach: 'Есть ли тренер сейчас',
+    diary: 'Готов вести дневник',
+    support: 'Нужна ли поддержка',
+    format: 'Формат программы',
+    contact: 'Предпочтительная связь'
+  };
+
+  function formatValue(name, value) {
+    if (!value || value.trim() === '') return '<span class="empty">—</span>';
+    
+    // Чекбоксы
+    if (['equipment', 'prefer', 'contact', 'diet_restrict'].indexOf(name) !== -1) {
+      return value;
+    }
+    // Радиокнопки
+    if (['gender', 'goal', 'smoking', 'has_coach', 'diary', 'support', 'budget'].indexOf(name) !== -1) {
+      return value;
+    }
+    // Даты
+    if (name === 'last_checkup' && value) {
+      var d = new Date(value);
+      if (!isNaN(d)) return d.toLocaleDateString('ru-RU');
+    }
+    // Время
+    if (['wake_time', 'sleep_time'].indexOf(name) !== -1) {
+      return value;
+    }
+    
+    return value;
+  }
+
+  function populateReview() {
+    var container = document.getElementById('review-container');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    var formData = {};
+    var cbNames = {};
+    
+    form.querySelectorAll('input[type=checkbox]').forEach(function (cb) {
+      cbNames[cb.name] = true;
+      if (!formData[cb.name]) formData[cb.name] = [];
+      if (cb.checked) formData[cb.name].push(cb.value);
+    });
+    
+    var fd = new FormData(form);
+    fd.forEach(function (val, key) {
+      if (key === '_honey') return;
+      if (cbNames[key]) return;
+      formData[key] = val;
+    });
+    
+    // Группируем по шагам
+    var stepFields = {
+      1: ['fio', 'phone', 'city', 'age', 'gender', 'height', 'weight_cur', 'weight_goal'],
+      2: ['goal', 'deadline', 'motivation'],
+      3: ['diseases', 'injuries', 'allergies', 'meds', 'last_checkup'],
+      4: ['job_type', 'activity_level', 'wake_time', 'sleep_time', 'sleep_hours', 'stress', 'alcohol', 'smoking'],
+      5: ['exp_level', 'freq', 'prev_exp', 'equipment', 'prefer', 'dislike_train'],
+      6: ['meals_count', 'water', 'breakfast', 'lunch', 'dinner', 'snack', 'eat_out', 'budget', 'diet_restrict', 'fav_food', 'hate_food'],
+      7: ['has_coach', 'diary', 'support', 'format', 'contact']
+    };
+    
+    for (var s = 1; s <= 7; s++) {
+      var fields = stepFields[s];
+      if (!fields) continue;
+      
+      var section = document.createElement('div');
+      section.className = 'review-section';
+      
+      var title = document.createElement('div');
+      title.className = 'review-section-title';
+      title.textContent = 'Шаг ' + s + ' — ' + (stepTitles[s] || '');
+      section.appendChild(title);
+      
+      fields.forEach(function (name) {
+        var value = formData[name] || '';
+        if (Array.isArray(value)) value = value.join(', ');
+        
+        var row = document.createElement('div');
+        row.className = 'review-row';
+        
+        var label = document.createElement('div');
+        label.className = 'review-label';
+        label.textContent = fieldLabels[name] || name;
+        
+        var val = document.createElement('div');
+        val.className = 'review-value';
+        val.innerHTML = formatValue(name, value);
+        
+        row.appendChild(label);
+        row.appendChild(val);
+        section.appendChild(row);
+      });
+      
+      container.appendChild(section);
+    }
+  }
+
   /* ---- SAVE / LOAD ---- */
   var saveTimer = null;
   function debounceSave() {
@@ -1721,9 +1929,10 @@ footer {
           btnNext.disabled = false;
           btnNext.textContent = 'Отправить анкету';
           submitting = false;
+          try { localStorage.removeItem('chk_anketa'); } catch (e) {}
         }
       }
-    }, 12000);
+    }, 20000);
   }
 
   function submitIframe(payload, cb) {
@@ -1738,6 +1947,7 @@ footer {
     tf.action = FORM_URL;
     tf.target = fname;
     tf.style.display = 'none';
+    tf.referrerPolicy = 'no-referrer-when-downgrade';
 
     var fields = Object.assign({}, payload, {
       '_subject':  'Новая анкета от клиента CHEKMAREV',
@@ -1833,9 +2043,7 @@ footer {
     el.addEventListener('input',  debounceSave);
     el.addEventListener('change', debounceSave);
   });
-  window.addEventListener('blur',         saveAll);
-  window.addEventListener('pagehide',     saveAll);
-  window.addEventListener('beforeunload', saveAll);
+  window.addEventListener('pagehide',         saveAll);
 
   /* ---- INIT ---- */
   var restored = loadAll();
@@ -1844,5 +2052,5 @@ footer {
 
 })();
 </script>
-<script>/* deck-guard: ровно один слайд виден; чиним CSS-конфликт show/hide */(function(){function g(){try{var s=document.querySelectorAll('.slide');if(s.length<2)return;var v=[].filter.call(s,function(e){return getComputedStyle(e).display!=='none'});if(v.length<2)return;if(s[1].offsetTop>s[0].offsetTop+4){var st=document.createElement('style');st.textContent='.slide:not(.active){display:none!important}';document.head.appendChild(st);if(!document.querySelector('.slide.active'))s[0].classList.add('active');}}catch(e){}}if(document.readyState==='loading')addEventListener('DOMContentLoaded',g);else g();})();</script></body>
+</body>
 </html>
