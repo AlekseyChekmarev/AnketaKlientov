@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Анкета — ALEKSEY CHEKMAREV</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  (function() {
+    emailjs.init("Ltzlc6BjuRrnSjz4C");
+  })();
+</script>
 <style>
 *, *::before, *::after {
   box-sizing: border-box;
@@ -22,7 +28,7 @@ html, body {
 body {
   background: #0a0a09;
   color: #d9d4cf;
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: Georgia, 'Times New Roman', serif;
   font-size: 15px;
   line-height: 1.65;
 }
@@ -48,7 +54,7 @@ body {
 }
 
 .intro-wordmark {
-  font-family: 'Georgia', serif;
+  font-family: Georgia, serif;
   font-size: clamp(1.6rem, 5vw, 2.4rem);
   font-weight: 800;
   color: #f5f1ed;
@@ -72,7 +78,7 @@ body {
 }
 
 .intro-headline {
-  font-family: 'Georgia', serif;
+  font-family: Georgia, serif;
   font-size: clamp(1.4rem, 4.5vw, 2rem);
   font-weight: 800;
   color: #f5f1ed;
@@ -101,7 +107,7 @@ body {
   font-size: 1rem;
   padding: 15px 52px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   letter-spacing: 0.06em;
   touch-action: manipulation;
@@ -134,7 +140,7 @@ header {
 }
 
 .logo {
-  font-family: 'Georgia', serif;
+  font-family: Georgia, serif;
   font-size: 1.3rem;
   font-weight: 800;
   color: #f5f1ed;
@@ -253,7 +259,7 @@ header {
 }
 
 .block-heading {
-  font-family: 'Georgia', serif;
+  font-family: Georgia, serif;
   font-size: 1.05rem;
   font-weight: 700;
   color: #f5f1ed;
@@ -326,7 +332,7 @@ header {
   border: 1px solid #2a5a2a;
   color: #5a9f5a;
   padding: 7px 14px;
-  border-radius: 6px;
+  border-radius: 8px;
   font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
@@ -419,7 +425,7 @@ textarea {
   border: 1px solid #252220;
   color: #d9d4cf;
   padding: 10px 13px;
-  border-radius: 7px;
+  border-radius: 8px;
   font-size: 0.93rem;
   font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
   width: 100%;
@@ -484,7 +490,7 @@ textarea {
   background: #110f0d;
   border: 1px solid #252220;
   padding: 8px 15px;
-  border-radius: 7px;
+  border-radius: 8px;
   cursor: pointer;
   font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
   font-size: 0.86rem;
@@ -570,7 +576,7 @@ input[type="range"]::-moz-range-thumb {
   color: #c97a4a;
   background: #110f0d;
   border: 1px solid #252220;
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 3px 7px;
 }
 .range-hints {
@@ -596,7 +602,7 @@ input[type="range"]::-moz-range-thumb {
   background: #110f0d;
   border: 1px solid #252220;
   padding: 7px 13px;
-  border-radius: 7px;
+  border-radius: 8px;
   transition: border-color 0.2s, background 0.2s;
   min-height: 36px;
 }
@@ -652,7 +658,7 @@ input[type="range"]::-moz-range-thumb {
   padding: 10px 14px;
   background: #110f0d;
   border: 1px solid #252220;
-  border-radius: 7px;
+  border-radius: 8px;
   font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
   font-size: 0.86rem;
   color: #8a8580;
@@ -676,7 +682,7 @@ input[type="range"]::-moz-range-thumb {
   font-size: 0.93rem;
   padding: 12px 24px;
   border: 1px solid #252220;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
   flex: 1;
@@ -701,7 +707,7 @@ input[type="range"]::-moz-range-thumb {
   font-size: 0.97rem;
   padding: 12px 28px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   letter-spacing: 0.04em;
   transition: background 0.2s, transform 0.15s;
@@ -744,7 +750,7 @@ input[type="range"]::-moz-range-thumb {
   display: block;
 }
 .success-wrap h2 {
-  font-family: 'Georgia', serif;
+  font-family: Georgia, serif;
   color: #5a9f5a;
   margin: 0 0 12px;
   font-size: 1.3rem;
@@ -839,7 +845,6 @@ footer {
 </head>
 <body>
 
-<!-- INTRO -->
 <div class="intro-screen" id="intro-screen">
   <div class="intro-wordmark"><em>ALE</em>KSEY</div>
   <div class="intro-wordmark">CHEK<em>MAREV</em></div>
@@ -849,25 +854,20 @@ footer {
   <button class="btn-start" id="btn-start">Начать</button>
 </div>
 
-<!-- CONFETTI -->
 <canvas id="confetti-canvas"></canvas>
 
-<!-- SAVED -->
 <div class="saved-badge" id="saved-badge" aria-live="polite">✓ Сохранено</div>
 
-<!-- TOAST -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <div class="page-wrap">
 
-  <!-- HEADER -->
   <header id="hdr">
     <div class="logo">CHEK<em>MAREV</em></div>
     <div class="step-label" id="step-lbl">Шаг 1 из 8</div>
   </header>
   <div class="rule" id="hdr-rule"></div>
 
-  <!-- PROGRESS -->
   <div class="progress-wrap" id="progress-wrap" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
     <div class="progress-meta">
       <span class="progress-caption">Заполнено</span>
@@ -878,26 +878,23 @@ footer {
     </div>
   </div>
 
-  <!-- DOTS -->
   <div class="step-dots" id="step-dots" aria-hidden="true">
     <div class="dot now" data-dot="1"></div>
-    <div class="dot"     data-dot="2"></div>
-    <div class="dot"     data-dot="3"></div>
-    <div class="dot"     data-dot="4"></div>
-    <div class="dot"     data-dot="5"></div>
-    <div class="dot"     data-dot="6"></div>
-    <div class="dot"     data-dot="7"></div>
-    <div class="dot"     data-dot="8"></div>
+    <div class="dot" data-dot="2"></div>
+    <div class="dot" data-dot="3"></div>
+    <div class="dot" data-dot="4"></div>
+    <div class="dot" data-dot="5"></div>
+    <div class="dot" data-dot="6"></div>
+    <div class="dot" data-dot="7"></div>
+    <div class="dot" data-dot="8"></div>
   </div>
 
-  <!-- FORM -->
   <form id="main-form" autocomplete="on" novalidate>
     <input type="hidden" name="_subject" value="Новая анкета от клиента CHEKMAREV">
     <input type="hidden" name="_template" value="table">
     <input type="hidden" name="_captcha" value="false">
-    <input type="text"   name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
 
-    <!-- STEP 1 — ОБЩИЕ ДАННЫЕ (email удалён) -->
     <div class="block active" data-step="1">
       <h3 class="block-heading">Общие данные</h3>
       <p class="block-sub">Давай начнём с основ. Расскажи немного о себе.</p>
@@ -959,7 +956,6 @@ footer {
       </div>
     </div>
 
-    <!-- STEP 2 — ЦЕЛЬ -->
     <div class="block" data-step="2">
       <h3 class="block-heading">Твоя цель</h3>
       <p class="block-sub">К чему мы стремимся? Выбери главную цель.</p>
@@ -999,7 +995,6 @@ footer {
       </div>
     </div>
 
-    <!-- STEP 3 — ЗДОРОВЬЕ -->
     <div class="block" data-step="3">
       <h3 class="block-heading">Здоровье</h3>
       <p class="block-sub">Важный блок. Это поможет нам избежать рисков.</p>
@@ -1033,7 +1028,6 @@ footer {
       </div>
     </div>
 
-    <!-- STEP 4 — ОБРАЗ ЖИЗНИ -->
     <div class="block" data-step="4">
       <h3 class="block-heading">Образ жизни</h3>
       <p class="block-sub">Как проходит твой обычный день?</p>
@@ -1104,7 +1098,6 @@ footer {
       </div>
     </div>
 
-    <!-- STEP 5 — ОПЫТ ТРЕНИРОВОК -->
     <div class="block" data-step="5">
       <h3 class="block-heading">Опыт тренировок</h3>
       <p class="block-sub">Что ты делал раньше? Это поможет подобрать нагрузку.</p>
@@ -1158,7 +1151,6 @@ footer {
       </div>
     </div>
 
-    <!-- STEP 6 — ПИТАНИЕ -->
     <div class="block" data-step="6">
       <h3 class="block-heading">Питание</h3>
       <p class="block-sub">Топливо для твоего тела. Расскажи, что ты ешь.</p>
@@ -1239,7 +1231,6 @@ footer {
       </div>
     </div>
 
-    <!-- STEP 7 — ФИНАЛЬНЫЕ ШТРИХИ -->
     <div class="block" data-step="7">
       <h3 class="block-heading">Финальные штрихи</h3>
       <p class="block-sub">Почти готово! Осталось совсем немного.</p>
@@ -1292,7 +1283,6 @@ footer {
       </div>
     </div>
 
-    <!-- STEP 8 — ПРОВЕРКА ДАННЫХ -->
     <div class="block" data-step="8">
       <h3 class="block-heading">Проверка данных</h3>
       <p class="block-sub">Проверь, всё ли заполнено верно. Если нужно что-то исправить — вернись назад.</p>
@@ -1301,13 +1291,11 @@ footer {
 
   </form>
 
-  <!-- NAV -->
   <div class="nav-area" id="nav-area">
     <button type="button" class="btn-prev" id="btn-prev" disabled>Назад</button>
     <button type="button" class="btn-next" id="btn-next">Далее</button>
   </div>
 
-  <!-- SUCCESS -->
   <div class="success-wrap" id="success-wrap">
     <h2>Анкета отправлена ✓</h2>
     <p id="success-text">Спасибо! Мы получили твои данные и свяжемся с тобой в ближайшее время.</p>
@@ -1319,10 +1307,6 @@ footer {
 <script>
 (function () {
   'use strict';
-
-  var FORMSUBMIT_EMAIL = 'AlekseyChekmarev310396@yandex.ru';
-  var AJAX_URL  = 'https://formsubmit.co/ajax/' + FORMSUBMIT_EMAIL;
-  var FORM_URL  = 'https://formsubmit.co/' + FORMSUBMIT_EMAIL;
 
   var step = 1;
   var totalSteps = 8;
@@ -1351,14 +1335,12 @@ footer {
     8: '🔍 Проверь данные перед отправкой'
   };
 
-  /* ---- INTRO ---- */
   document.getElementById('btn-start').addEventListener('click', function () {
     var sc = document.getElementById('intro-screen');
     sc.classList.add('hidden');
     setTimeout(function () { sc.style.display = 'none'; }, 520);
   });
 
-  /* ---- TOAST ---- */
   var toastTmr = null;
   function showToast(msg, isErr) {
     if (toastTmr) clearTimeout(toastTmr);
@@ -1368,7 +1350,6 @@ footer {
     toastTmr = setTimeout(function () { toastEl.classList.remove('show'); }, 2600);
   }
 
-  /* ---- SAVED ---- */
   var savedTmr = null;
   function showSaved() {
     if (savedTmr) clearTimeout(savedTmr);
@@ -1376,7 +1357,6 @@ footer {
     savedTmr = setTimeout(function () { savedBadge.classList.remove('show'); }, 1600);
   }
 
-  /* ---- UPDATE UI ---- */
   function updateUI() {
     document.querySelectorAll('.block').forEach(function (bl) {
       var s = parseInt(bl.getAttribute('data-step'), 10);
@@ -1389,7 +1369,6 @@ footer {
 
     btnPrev.disabled = (step === 1);
     
-    // На шаге 8 — кнопка «Отправить анкету»
     if (step === totalSteps) {
       btnNext.textContent = 'Отправить анкету';
       btnNext.classList.remove('pulse');
@@ -1403,7 +1382,6 @@ footer {
     pctLbl.textContent = pct + '%';
     stepLbl.textContent = 'Шаг ' + step + ' из ' + totalSteps;
     
-    // Update ARIA progress
     if (progressWrap) {
       progressWrap.setAttribute('aria-valuenow', pct);
     }
@@ -1417,7 +1395,6 @@ footer {
 
     showToast(toastMap[step]);
     
-    // На шаге 8 — собрать и показать обзор
     if (step === totalSteps) {
       populateReview();
     }
@@ -1425,7 +1402,6 @@ footer {
     debounceSave();
   }
 
-  /* ---- PULSE ---- */
   function checkPulse() {
     var bl = document.querySelector('.block[data-step="' + step + '"]');
     if (!bl) return;
@@ -1445,7 +1421,6 @@ footer {
     else btnNext.classList.remove('pulse');
   }
 
-  /* ---- VALIDATE ---- */
   function validateStep(s) {
     var bl = document.querySelector('.block[data-step="' + s + '"]');
     if (!bl) return true;
@@ -1505,7 +1480,6 @@ footer {
     return valid;
   }
 
-  /* ---- NAV ---- */
   btnNext.addEventListener('click', function () {
     if (submitting) return;
     if (step < totalSteps) {
@@ -1533,7 +1507,6 @@ footer {
     }
   });
 
-  /* ---- PHONE MASK ---- */
   (function () {
     var ph = document.getElementById('phone');
     if (!ph) return;
@@ -1568,7 +1541,6 @@ footer {
     });
   })();
 
-  /* ---- IMT ---- */
   function updateIMT() {
     var h = parseFloat(document.getElementById('height').value);
     var w = parseFloat(document.getElementById('weight_cur').value);
@@ -1595,7 +1567,6 @@ footer {
   document.getElementById('height').addEventListener('input', updateIMT);
   document.getElementById('weight_cur').addEventListener('input', updateIMT);
 
-  /* ---- RANGES ---- */
   document.querySelectorAll('.rng').forEach(function (r) {
     var el = document.getElementById(r.id + '-val');
     if (!el) return;
@@ -1603,7 +1574,6 @@ footer {
     r.addEventListener('input', function () { el.textContent = r.value; });
   });
 
-  /* ---- DIET NONE ---- */
   var dietNone = document.querySelector('input[name="diet_restrict"][value="Отсутствует"]');
   if (dietNone) {
     dietNone.addEventListener('change', function () {
@@ -1615,7 +1585,6 @@ footer {
     });
   }
 
-  /* ---- CHAR COUNTERS ---- */
   document.querySelectorAll('textarea').forEach(function (ta) {
     var cc = document.createElement('div');
     cc.className = 'char-ct';
@@ -1625,7 +1594,6 @@ footer {
     upd();
   });
 
-  /* ---- INPUT LIVE CLEAN ---- */
   form.querySelectorAll('input:not([type=radio]):not([type=checkbox]), select, textarea').forEach(function (el) {
     el.addEventListener('input', function () {
       if (el.value.trim()) {
@@ -1644,7 +1612,6 @@ footer {
     });
   });
 
-  /* ---- REVIEW (STEP 8) ---- */
   var stepTitles = {
     1: 'Общие данные',
     2: 'Твоя цель',
@@ -1707,20 +1674,16 @@ footer {
   function formatValue(name, value) {
     if (!value || value.trim() === '') return '<span class="empty">—</span>';
     
-    // Чекбоксы
     if (['equipment', 'prefer', 'contact', 'diet_restrict'].indexOf(name) !== -1) {
       return value;
     }
-    // Радиокнопки
     if (['gender', 'goal', 'smoking', 'has_coach', 'diary', 'support', 'budget'].indexOf(name) !== -1) {
       return value;
     }
-    // Даты
     if (name === 'last_checkup' && value) {
       var d = new Date(value);
       if (!isNaN(d)) return d.toLocaleDateString('ru-RU');
     }
-    // Время
     if (['wake_time', 'sleep_time'].indexOf(name) !== -1) {
       return value;
     }
@@ -1749,7 +1712,6 @@ footer {
       formData[key] = val;
     });
     
-    // Группируем по шагам
     var stepFields = {
       1: ['fio', 'phone', 'city', 'age', 'gender', 'height', 'weight_cur', 'weight_goal'],
       2: ['goal', 'deadline', 'motivation'],
@@ -1796,7 +1758,6 @@ footer {
     }
   }
 
-  /* ---- SAVE / LOAD ---- */
   var saveTimer = null;
   function debounceSave() {
     if (saveTimer) clearTimeout(saveTimer);
@@ -1860,7 +1821,6 @@ footer {
     } catch (e) { return false; }
   }
 
-  /* ---- COLLECT ---- */
   function collectData() {
     var payload = {};
     var cbNames = {};
@@ -1881,7 +1841,6 @@ footer {
     return payload;
   }
 
-  /* ---- SUBMIT ---- */
   function doSubmit() {
     if (submitting) return;
     submitting = true;
@@ -1889,95 +1848,20 @@ footer {
     btnNext.textContent = 'Отправка…';
 
     var payload = collectData();
-    var done = false;
-    var fetchFailed = false;
 
-    payload._next = window.location.href;
-
-    function onFetchResult(ok) {
-      if (done) return;
-      if (ok) {
-        done = true;
-        showSuccess();
-      } else {
-        fetchFailed = true;
-        submitIframe(payload, function () {
-          if (done) return;
-          done = true;
-          showSuccess();
-        });
-      }
-    }
-
-    fetch(AJAX_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(payload)
-    }).then(function (r) {
-      onFetchResult(r.ok);
-    }).catch(function () {
-      onFetchResult(false);
-    });
-
-    setTimeout(function () {
-      if (!done) {
-        done = true;
-        if (!fetchFailed) {
-          showSuccess();
-        } else {
-          showToast('Ошибка отправки. Попробуйте ещё раз.', true);
-          btnNext.disabled = false;
-          btnNext.textContent = 'Отправить анкету';
-          submitting = false;
-          try { localStorage.removeItem('chk_anketa'); } catch (e) {}
-        }
-      }
-    }, 20000);
+    emailjs.send('service_f34dnxl', 'template_6wbe0f9', payload)
+      .then(function(response) {
+         console.log('SUCCESS', response.status, response.text);
+         showSuccess();
+      }, function(error) {
+         console.log('FAILED', error);
+         showToast('Ошибка отправки. Попробуйте ещё раз.', true);
+         btnNext.disabled = false;
+         btnNext.textContent = 'Отправить анкету';
+         submitting = false;
+      });
   }
 
-  function submitIframe(payload, cb) {
-    var fname = 'fs_' + Date.now();
-    var ifr = document.createElement('iframe');
-    ifr.name = fname;
-    ifr.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;';
-    document.body.appendChild(ifr);
-
-    var tf = document.createElement('form');
-    tf.method = 'POST';
-    tf.action = FORM_URL;
-    tf.target = fname;
-    tf.style.display = 'none';
-    tf.referrerPolicy = 'no-referrer-when-downgrade';
-
-    var fields = Object.assign({}, payload, {
-      '_subject':  'Новая анкета от клиента CHEKMAREV',
-      '_template': 'table',
-      '_captcha':  'false'
-    });
-
-    for (var k in fields) {
-      if (!fields.hasOwnProperty(k)) continue;
-      var inp = document.createElement('input');
-      inp.type = 'hidden'; inp.name = k; inp.value = fields[k];
-      tf.appendChild(inp);
-    }
-    document.body.appendChild(tf);
-
-    var fired = false;
-    function once() {
-      if (fired) return; fired = true;
-      if (cb) cb(true);
-      setTimeout(function () {
-        if (ifr.parentNode) ifr.parentNode.removeChild(ifr);
-        if (tf.parentNode)  tf.parentNode.removeChild(tf);
-      }, 2500);
-    }
-    ifr.onload = once;
-    setTimeout(once, 7000);
-    tf.submit();
-  }
-
-  /* ---- SUCCESS ---- */
   function showSuccess() {
     var name = (document.getElementById('fio').value || '').trim().split(' ')[0] || 'Клиент';
     document.getElementById('success-text').textContent =
@@ -1997,7 +1881,6 @@ footer {
     launchConfetti();
   }
 
-  /* ---- CONFETTI ---- */
   function launchConfetti() {
     var canvas = document.getElementById('confetti-canvas');
     var ctx = canvas.getContext('2d');
@@ -2038,19 +1921,17 @@ footer {
     setTimeout(function () { active = false; }, 5000);
   }
 
-  /* ---- AUTO-SAVE LISTENERS ---- */
   form.querySelectorAll('input, select, textarea').forEach(function (el) {
     el.addEventListener('input',  debounceSave);
     el.addEventListener('change', debounceSave);
   });
   window.addEventListener('pagehide',         saveAll);
 
-  /* ---- INIT ---- */
   var restored = loadAll();
   if (!restored) step = 1;
   updateUI();
 
 })();
 </script>
-</body>
+<script>/* deck-guard: ровно один слайд виден; чиним CSS-конфликт show/hide */(function(){function g(){try{var s=document.querySelectorAll('.slide');if(s.length<2)return;var v=[].filter.call(s,function(e){return getComputedStyle(e).display!=='none'});if(v.length<2)return;if(s[1].offsetTop>s[0].offsetTop+4){var st=document.createElement('style');st.textContent='.slide:not(.active){display:none!important}';document.head.appendChild(st);if(!document.querySelector('.slide.active'))s[0].classList.add('active');}}catch(e){}}if(document.readyState==='loading')addEventListener('DOMContentLoaded',g);else g();})();</script></body>
 </html>
